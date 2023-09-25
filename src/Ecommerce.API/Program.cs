@@ -1,4 +1,6 @@
 
+using Ecommerce.API.Configurations;
+
 namespace Ecommerce.API
 {
     public class Program
@@ -9,6 +11,9 @@ namespace Ecommerce.API
 
             // Add services to the container.
 
+            builder.Services.AddContextsConfig(builder.Configuration);
+            builder.Services.ResolveDependencies();
+            builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
