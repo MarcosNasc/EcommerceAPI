@@ -1,5 +1,7 @@
-﻿using Ecommerce.BLL.Interfaces.Repositories;
+﻿using Ecommerce.BLL.Interfaces;
+using Ecommerce.BLL.Interfaces.Repositories;
 using Ecommerce.BLL.Interfaces.Services;
+using Ecommerce.BLL.Notifications;
 using Ecommerce.BLL.Services;
 using Ecommerce.DAL.Repository;
 
@@ -11,10 +13,15 @@ namespace Ecommerce.API.Configurations
         {
             #region Services
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<INotificator, Notificator>();
+
             #endregion
 
             #region Repositories
             services.AddScoped<ISupplierRepository,SupplierRepository>();
+            services.AddScoped<IAddressRepository,AddressRepository>();
+            services.AddScoped<IProductRepository,ProductRepository>();
             #endregion
 
             return services;
