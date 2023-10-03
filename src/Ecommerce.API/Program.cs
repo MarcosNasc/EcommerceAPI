@@ -1,5 +1,6 @@
 
 using Ecommerce.API.Configurations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API
 {
@@ -15,6 +16,11 @@ namespace Ecommerce.API
             builder.Services.ResolveDependencies();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddControllers();
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
