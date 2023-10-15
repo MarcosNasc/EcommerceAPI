@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Ecommerce.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     public class SuppliersController : BaseController
     {
         private readonly ISupplierService _supplierService;
@@ -17,12 +16,11 @@ namespace Ecommerce.API.Controllers
         private readonly IAddressRepository _addressRepository;
 
 
-        public SuppliersController(
-                                    ISupplierRepository supplierRepository 
-                                   ,IAddressRepository addressRepository
-                                   ,IMapper mapper
-                                   ,ISupplierService supplierService
-                                   ,INotificator notificator)
+        public SuppliersController(ISupplierService supplierService
+                                  ,ISupplierRepository supplierRepository 
+                                  ,IAddressRepository addressRepository
+                                  ,IMapper mapper
+                                  ,INotificator notificator)
             :base(mapper,notificator)
         {
             _supplierService = supplierService;
@@ -58,15 +56,9 @@ namespace Ecommerce.API.Controllers
 
             var supplier = _mapper.Map<Supplier>(supplierDTO);
 
-            try
-            {
-               await _supplierService.Add(supplier);
-               return CustomResponse(supplierDTO);
-            }
-            catch(Exception ex)
-            {
-                throw;
-            }
+            await _supplierService.Add(supplier);
+
+            return CustomResponse(supplierDTO);
         }
 
         [HttpPut("{id:guid}")]
@@ -81,15 +73,10 @@ namespace Ecommerce.API.Controllers
 
             var supplier = _mapper.Map<Supplier>(supplierDTO);
 
-            try
-            {
-                await _supplierService.Update(supplier);
-                return CustomResponse(supplierDTO);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            await _supplierService.Update(supplier);
+
+            return CustomResponse(supplierDTO);
+           
         }
 
         [HttpDelete("{id:guid}")]
@@ -102,15 +89,10 @@ namespace Ecommerce.API.Controllers
 
             if (supplier is null) return NotFound();
 
-            try
-            {
-                await _supplierService.Remove(supplier.Id);
-                return CustomResponse();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            await _supplierService.Remove(supplier.Id);
+
+            return CustomResponse();
+
         }
 
         [HttpGet("getAddressById/{id:guid}")]
