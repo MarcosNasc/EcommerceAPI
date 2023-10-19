@@ -1,6 +1,7 @@
 ﻿using Ecommerce.API.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Ecommerce.API.DTOs
 {
@@ -14,7 +15,7 @@ namespace Ecommerce.API.DTOs
         [Required(ErrorMessageResourceType = typeof(Validations), ErrorMessageResourceName = "FieldRequired")]
         [StringLength(1000, ErrorMessageResourceType = typeof(Validations), ErrorMessageResourceName = "StringLength", MinimumLength = 2)]
         public string Description { get; set; }
-        public IFormFile? ImageUpload { get; set; }
+        public string ImageUpload { get; set; }
         public string Image { get; set; }
         //[Money]
         [Required(ErrorMessageResourceType = typeof(Validations), ErrorMessageResourceName = "FieldRequired")]
@@ -27,7 +28,9 @@ namespace Ecommerce.API.DTOs
 
         [DisplayName("Supplier")]
         public Guid SupplierId { get; set; }
+        [JsonIgnore]
         public SupplierDTO? Supplier { get; set; }
+        [JsonIgnore]
         public IEnumerable<SupplierDTO> Suppliers { get; set; } = new List<SupplierDTO>();
     }
 }
