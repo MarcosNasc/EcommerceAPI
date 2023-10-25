@@ -15,12 +15,24 @@ namespace Ecommerce.API
             builder.Services.AddContextsConfig(builder.Configuration);
             builder.Services.ResolveDependencies();
             builder.Services.AddAutoMapper(typeof(Program));
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Development",builder =>
+                {
+                    builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+                });
+            });
+
             builder.Services.AddControllers();
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
 
             });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -34,10 +46,11 @@ namespace Ecommerce.API
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("Development");
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
