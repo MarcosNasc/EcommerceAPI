@@ -59,6 +59,25 @@ namespace Ecommerce.API.Controllers
             return CustomResponse(productDTO);
         }
 
+        [HttpPost("CreateStream")]
+        public async Task<ActionResult<ProductImageDTO>> CreateStream(ProductImageDTO productDTO)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            var product = _mapper.Map<Product>(productDTO);
+
+            var imgPrefix = Guid.NewGuid() + "_";
+
+            if (!await FileUpload(productDTO.ImageUpload, imgPrefix))
+            {
+                return CustomResponse();
+            }
+
+            productDTO.Image = imgPrefix + productDTO.ImageUpload.FileName;
+            await _productService.Add(product);
+            return CustomResponse(productDTO);
+        }
+
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<ProductDTO>> Update(Guid id,ProductDTO productDTO)
         {
@@ -100,6 +119,30 @@ namespace Ecommerce.API.Controllers
             }
 
             System.IO.File.WriteAllBytes(filePath, fileDataByteArray);
+
+            return true;
+        }
+
+        private async Task<bool> FileUpload(IFormFile file, string imgPrefix)
+        {
+            if(file == null || file.Length == 0)
+            {
+                NotifyError("Forneça uma imagem para este produto!");
+                return false;
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images", imgPrefix + file.FileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                NotifyError("Já existe um arquivo com esse nome");
+                return false;
+            }
+
+            using(var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
 
             return true;
         }

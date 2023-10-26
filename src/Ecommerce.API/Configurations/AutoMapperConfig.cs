@@ -11,6 +11,7 @@ namespace Ecommerce.API.Configurations
             CreateMap<Supplier, SupplierDTO>().ReverseMap();
             CreateMap<Address, AddressDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Product, ProductImageDTO>().ReverseMap();
         }
     }
 }
