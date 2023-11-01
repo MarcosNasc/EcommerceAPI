@@ -81,11 +81,34 @@ namespace Ecommerce.API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<ProductDTO>> Update(Guid id,ProductDTO productDTO)
         {
-            if(id != productDTO.Id) return BadRequest(ModelState);
+            if (id != productDTO.Id)
+            {
+                NotifyError("O produto não foi encontrado");
+                return CustomResponse(); 
+            }
+
+            var productCurrent = _mapper.Map<ProductDTO>(await _productRepository.GetById(id));
+            productDTO.Image = productCurrent.Image;
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var product = _mapper.Map<Product>(productDTO);
+            if(productDTO.ImageUpload != null)
+            {
+                var imageName = Guid.NewGuid() + "_" + productDTO.Image;
+                if(!FileUpload(productDTO.ImageUpload, imageName))
+                {
+                    return CustomResponse(ModelState);
+                }
+
+                productCurrent.Image = imageName;
+            }
+
+            productCurrent.Name = productDTO.Name;
+            productCurrent.Description = productDTO.Description;
+            productCurrent.Value = productDTO.Value;
+            productCurrent.IsActive = productDTO.IsActive;
+
+            var product = _mapper.Map<Product>(productCurrent);
 
             await _productService.Update(product);
             return CustomResponse(productDTO);
