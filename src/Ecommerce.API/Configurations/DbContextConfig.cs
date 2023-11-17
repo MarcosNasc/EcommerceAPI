@@ -1,4 +1,5 @@
-﻿using Ecommerce.DAL.Context;
+﻿using Ecommerce.API.Data;
+using Ecommerce.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.API.Configurations
@@ -9,6 +10,7 @@ namespace Ecommerce.API.Configurations
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             services.AddDbContext<EcommerceDBContext>(options => options.UseSqlServer(connectionString));
 
             return services;

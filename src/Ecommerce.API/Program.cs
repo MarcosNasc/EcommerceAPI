@@ -8,8 +8,10 @@ namespace Ecommerce.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = builder.Configuration;
 
-            builder.Services.AddContextsConfig(builder.Configuration);
+            builder.Services.AddContextsConfig(configuration);
+            builder.Services.AddIdentityConfig();
             builder.Services.ResolveDependencies();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddWebApiConfig();
