@@ -1,8 +1,13 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using AutoMapper;
 using Ecommerce.API.DTOs;
+using Ecommerce.API.Extensions;
 using Ecommerce.BLL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Ecommerce.API.Controllers
 {
@@ -11,15 +16,18 @@ namespace Ecommerce.API.Controllers
     {
         private SignInManager<IdentityUser> _signInManager { get; set; }
         private UserManager<IdentityUser> _userManager { get; set; }
-
+        private readonly AppSettings _appSettings;
         public AuthController(SignInManager<IdentityUser> signInManager
                               ,UserManager<IdentityUser> userManager
                               ,IMapper mapper 
-                              ,INotificator notificator)
+                              ,INotificator notificator
+                              ,IOptions<AppSettings> appSettings
+                              )
             : base(mapper, notificator)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _appSettings = appSettings.Value;
         }
 
         [HttpPost("Register")]
@@ -39,7 +47,7 @@ namespace Ecommerce.API.Controllers
             if(result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return CustomResponse(registerUser);
+                return Ok(GenerateJWT());
             }
 
             foreach(var error in result.Errors)
@@ -69,7 +77,23 @@ namespace Ecommerce.API.Controllers
                 return CustomResponse(loginUser);
             }
 
-            return CustomResponse(loginUser);
+            return Ok(GenerateJWT());
+        }
+
+        private string GenerateJWT()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor()
+            {
+                Issuer = _appSettings.Issuer,
+                Audience = _appSettings.ValidIn,
+                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256)
+            });
+
+            var encodedToken = tokenHandler.WriteToken(token);
+            return encodedToken;
         }
     }
 }

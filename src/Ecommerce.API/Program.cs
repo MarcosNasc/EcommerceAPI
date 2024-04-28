@@ -11,7 +11,7 @@ namespace Ecommerce.API
             var configuration = builder.Configuration;
 
             builder.Services.AddContextsConfig(configuration);
-            builder.Services.AddIdentityConfig();
+            builder.Services.AddIdentityConfig(configuration);
             builder.Services.ResolveDependencies();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddWebApiConfig();
