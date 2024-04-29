@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Ecommerce.API.DTOs;
+using Ecommerce.API.Extensions.Attributes;
 using Ecommerce.BLL.Entities;
 using Ecommerce.BLL.Interfaces;
 using Ecommerce.BLL.Interfaces.Repositories;
 using Ecommerce.BLL.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class ProductsController : BaseController
     {
@@ -41,6 +44,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPost]
+        [ClaimsAuthorize("Crud","Create")]
         public async Task<ActionResult<ProductDTO>> Create(ProductDTO productDTO)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -60,6 +64,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPost("CreateStream")]
+        [ClaimsAuthorize("Crud","Create")]
         public async Task<ActionResult<ProductImageDTO>> CreateStream(ProductImageDTO productDTO)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -79,6 +84,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ClaimsAuthorize("Crud","Update")]
         public async Task<ActionResult<ProductDTO>> Update(Guid id,ProductDTO productDTO)
         {
             if (id != productDTO.Id)
@@ -87,7 +93,7 @@ namespace Ecommerce.API.Controllers
                 return CustomResponse(); 
             }
 
-            var productCurrent = _mapper.Map<ProductDTO>(await _productRepository.GetById(id));
+            var productCurrent = _mapper.Map<ProductDTO>(await _productRepository.GetProductSupplier(id));
             productDTO.Image = productCurrent.Image;
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -115,6 +121,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [ClaimsAuthorize("Crud","Delete")]
         public async Task<ActionResult<ProductDTO>> Delete(Guid id)
         {
             var product = await _productRepository.GetById(id);

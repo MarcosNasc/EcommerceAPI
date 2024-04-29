@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Ecommerce.API.DTOs;
+using Ecommerce.API.Extensions.Attributes;
 using Ecommerce.BLL.Entities;
 using Ecommerce.BLL.Interfaces;
 using Ecommerce.BLL.Interfaces.Repositories;
 using Ecommerce.BLL.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class SuppliersController : BaseController
     {
@@ -47,7 +50,8 @@ namespace Ecommerce.API.Controllers
             return  Ok(supplier);
         }
 
-        [HttpPost]
+        [HttpPost] 
+        [ClaimsAuthorize("Crud","Create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierDTO>> Create(SupplierDTO supplierDTO)
@@ -62,6 +66,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ClaimsAuthorize("Crud","Update")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +85,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [ClaimsAuthorize("Crud","Delete")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<SupplierDTO>> Delete(Guid id)
@@ -103,6 +109,7 @@ namespace Ecommerce.API.Controllers
         }
 
         [HttpPut("UpdateAddress")]
+        [ClaimsAuthorize("Crud","Update")]
         public async Task<IActionResult> UpdateAddress(Guid id, AddressDTO addressDTO)
         {
             if (id != addressDTO.Id) return BadRequest();
