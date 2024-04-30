@@ -13,7 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Ecommerce.API.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthController : BaseController
+    public class AuthController : MainController
     {
         private SignInManager<IdentityUser> _signInManager { get; set; }
         private UserManager<IdentityUser> _userManager { get; set; }
@@ -23,8 +23,9 @@ namespace Ecommerce.API.Controllers
                               ,IMapper mapper 
                               ,INotificator notificator
                               ,IOptions<AppSettings> appSettings
+                              ,IUser appUser
                               )
-            : base(mapper, notificator)
+            : base(mapper, notificator,appUser)
         {
             _signInManager = signInManager;
             _userManager = userManager;

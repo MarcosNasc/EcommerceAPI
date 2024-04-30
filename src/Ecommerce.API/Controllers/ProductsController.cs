@@ -12,7 +12,7 @@ namespace Ecommerce.API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class ProductsController : BaseController
+    public class ProductsController : MainController
     {
         private readonly IProductService _productService;
         private readonly IProductRepository _productRepository;
@@ -20,7 +20,9 @@ namespace Ecommerce.API.Controllers
         public ProductsController(IProductService productService
                                  ,IProductRepository productRepository
                                  ,IMapper mapper
-                                 ,INotificator notificator) : base(mapper, notificator)
+                                 ,INotificator notificator
+                                 ,IUser appUser
+                                 ) : base(mapper, notificator,appUser)
         {
             _productService = productService;
             _productRepository = productRepository;

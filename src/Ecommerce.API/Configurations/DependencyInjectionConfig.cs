@@ -1,4 +1,5 @@
-﻿using Ecommerce.BLL.Interfaces;
+﻿using Ecommerce.API.Extensions;
+using Ecommerce.BLL.Interfaces;
 using Ecommerce.BLL.Interfaces.Repositories;
 using Ecommerce.BLL.Interfaces.Services;
 using Ecommerce.BLL.Notifications;
@@ -22,6 +23,11 @@ namespace Ecommerce.API.Configurations
             services.AddScoped<ISupplierRepository,SupplierRepository>();
             services.AddScoped<IAddressRepository,AddressRepository>();
             services.AddScoped<IProductRepository,ProductRepository>();
+            #endregion
+
+            #region Extensions
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, User>();
             #endregion
 
             return services;

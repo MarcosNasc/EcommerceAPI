@@ -7,17 +7,29 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace Ecommerce.API.Controllers
 {
     [ApiController]
-    public abstract class BaseController : ControllerBase
+    public abstract class MainController : ControllerBase
     {
         protected readonly IMapper _mapper;
         protected readonly INotificator _notificator;
-
-        protected BaseController(IMapper mapper,
-                                 INotificator notificator   
+        protected readonly IUser _appUser;
+        
+        protected Guid UserId { get; private set; }
+        protected bool UserAuthenticated { get; private set; }
+        
+        protected MainController(IMapper mapper
+                                 ,INotificator notificator  
+                                 ,IUser appUser
         )
         {
             _mapper = mapper;
             _notificator = notificator;
+            _appUser = appUser;
+
+            if (appUser.IsAuthenticated())
+            {
+                UserId = appUser.GetUserId();
+                UserAuthenticated = true;
+            }
         }
 
         protected ActionResult CustomResponse(ModelStateDictionary modelState)

@@ -12,7 +12,7 @@ namespace Ecommerce.API.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class SuppliersController : BaseController
+    public class SuppliersController : MainController
     {
         private readonly ISupplierService _supplierService;
         private readonly ISupplierRepository _supplierRepository;
@@ -23,8 +23,9 @@ namespace Ecommerce.API.Controllers
                                   ,ISupplierRepository supplierRepository 
                                   ,IAddressRepository addressRepository
                                   ,IMapper mapper
-                                  ,INotificator notificator)
-            :base(mapper,notificator)
+                                  ,INotificator notificator
+                                  ,IUser appUser)
+            :base(mapper,notificator,appUser)
         {
             _supplierService = supplierService;
             _supplierRepository = supplierRepository;
