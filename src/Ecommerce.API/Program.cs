@@ -19,14 +19,8 @@ namespace Ecommerce.API
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseWebApiConfiguration();
+            
+            app.UseWebApiConfiguration(app.Environment);
 
             app.MapControllers();
 

@@ -23,15 +23,35 @@ namespace Ecommerce.API.Configurations
                        .AllowAnyMethod()
                        .AllowAnyHeader();
                 });
+
+                options.AddPolicy("Production", builder =>
+                {
+                    builder
+                        .WithMethods("GET")
+                        .WithOrigins("https://localhost")
+                        .SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .AllowAnyHeader();
+                });
             });
 
             return services;
         }
 
-        public static IApplicationBuilder UseWebApiConfiguration(this IApplicationBuilder app)
+        public static IApplicationBuilder UseWebApiConfiguration(this IApplicationBuilder app , IWebHostEnvironment env)
         {
-            app.UseCors("Development");
-
+            if (env.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                app.UseCors("Development");
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseCors("Production");
+                app.UseHsts();
+            }
+            
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
