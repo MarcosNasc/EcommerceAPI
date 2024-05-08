@@ -1,5 +1,8 @@
 
 using Ecommerce.API.Configurations;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.OpenApi.Models;
 
 namespace Ecommerce.API
 {
@@ -15,13 +18,16 @@ namespace Ecommerce.API
             builder.Services.ResolveDependencies();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddWebApiConfig();
+            builder.Services.AddSwaggerConfig();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
+         
             var app = builder.Build();
+            var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
             
             app.UseWebApiConfiguration(app.Environment);
 
+            app.UseSwaggerConfig(provider);
+            
             app.MapControllers();
 
             app.Run();

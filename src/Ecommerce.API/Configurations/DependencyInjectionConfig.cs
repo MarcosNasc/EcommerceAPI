@@ -5,6 +5,8 @@ using Ecommerce.BLL.Interfaces.Services;
 using Ecommerce.BLL.Notifications;
 using Ecommerce.BLL.Services;
 using Ecommerce.DAL.Repository;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Ecommerce.API.Configurations
 {
@@ -29,7 +31,8 @@ namespace Ecommerce.API.Configurations
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, User>();
             #endregion
-
+            
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             return services;
         }
     }

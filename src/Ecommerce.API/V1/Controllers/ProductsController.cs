@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ecommerce.API.Controllers;
 using Ecommerce.API.DTOs;
 using Ecommerce.API.Extensions.Attributes;
 using Ecommerce.BLL.Entities;
@@ -8,10 +9,11 @@ using Ecommerce.BLL.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ecommerce.API.Controllers
+namespace Ecommerce.API.V1.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProductsController : MainController
     {
         private readonly IProductService _productService;

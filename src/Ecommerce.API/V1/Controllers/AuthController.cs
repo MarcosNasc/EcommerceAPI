@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Ecommerce.API.Controllers;
 using Ecommerce.API.DTOs;
 using Ecommerce.API.Extensions;
 using Ecommerce.BLL.Interfaces;
@@ -10,9 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Ecommerce.API.Controllers
+namespace Ecommerce.API.V1.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : MainController
     {
         private SignInManager<IdentityUser> _signInManager { get; set; }
