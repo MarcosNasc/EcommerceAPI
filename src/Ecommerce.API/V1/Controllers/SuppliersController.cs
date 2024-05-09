@@ -104,14 +104,14 @@ namespace Ecommerce.API.V1.Controllers
 
         }
 
-        [HttpGet("getAddressById/{id:guid}")]
+        [HttpGet("suppliers/{id:guid}")]
         public async Task<AddressDTO> GetAddressById(Guid id)
         {
-            var addressDTO = _mapper.Map<AddressDTO>(_addressRepository.GetById(id));
+            var addressDTO = _mapper.Map<AddressDTO>(await _addressRepository.GetById(id));
             return addressDTO;
         }
 
-        [HttpPut("UpdateAddress")]
+        [HttpPut("suppliers/{id:guid}")]
         [ClaimsAuthorize("Crud","Update")]
         public async Task<IActionResult> UpdateAddress(Guid id, AddressDTO addressDTO)
         {
